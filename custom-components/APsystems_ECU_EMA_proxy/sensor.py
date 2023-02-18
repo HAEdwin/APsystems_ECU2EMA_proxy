@@ -28,10 +28,22 @@ class HTTPSERVER(BaseRequestHandler):
         
         rec = self.request.recv(1024)
         if rec:
-            LOGGER.warning(f"Received data on port: {myport} from ECU at: {self.client_address[0]} data: {rec}")
-            send_str = "Thank you!"
-            LOGGER.warning(f"Sending: {send_str}")
-            self.request.send(send_str.encode('utf-8'))
+            LOGGER.warning(f"Received from ECU @{self.client_address[0]}:{myport} - {rec}")
+
+            # forward message to EMA
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect(("3.67.1.32", myport))
+            try:
+                sock.sendall(rec)
+                LOGGER.warning(f"Forwarded to EMA: {rec} on port: {myport}")
+                response = sock.recv(1024)
+                LOGGER.warning(f"Received from EMA: {response}")
+            finally:
+                sock.close()
+            
+            # return message to ECU
+            LOGGER.warning(f"Sending back to ECU: {response}")
+            self.request.send(response)
 
 # Dit is de client voor de connectie naar de EMA server met variabele poort
 # aangeroepen met: client(ip, PORT, b'Hello World 1')
@@ -54,11 +66,11 @@ def setup_platform(
     """Set up the sensor platform."""
     add_entities([ExampleSensor()])
 
-    listener_1 = socketserver.TCPServer((host, 5000), HTTPSERVER)
+    listener_1 = socketserver.TCPServer((host, 8995), HTTPSERVER)
     thread_1 = threading.Thread(target=listener_1.serve_forever)
-    listener_2 = socketserver.TCPServer((host, 5001), HTTPSERVER)
+    listener_2 = socketserver.TCPServer((host, 8996), HTTPSERVER)
     thread_2 = threading.Thread(target=listener_2.serve_forever)
-    listener_3 = socketserver.TCPServer((host, 5002), HTTPSERVER)
+    listener_3 = socketserver.TCPServer((host, 8997), HTTPSERVER)
     thread_3 = threading.Thread(target=listener_3.serve_forever)
     for threads in thread_1, thread_2, thread_3:
         threads.start()
