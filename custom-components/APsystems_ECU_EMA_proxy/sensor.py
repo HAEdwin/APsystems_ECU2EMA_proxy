@@ -14,13 +14,10 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 import logging
 LOGGER = logging.getLogger(__name__)
 
-host = "172.16.0.19"
-
 import socketserver
 from socketserver import BaseRequestHandler
 from datetime import datetime, timedelta
 import threading
-
 
 host = '172.16.0.19' #Your host IP-address here
 
@@ -49,9 +46,6 @@ def setup_platform(
     LOGGER.warning("Proxy Started...")
     for threads in thread_1, thread_2:
         threads.start()
-
-    for threads in thread_1, thread_2:
-        threads.join()
 
 class ExampleSensor(SensorEntity):
     """Representation of a Sensor."""
