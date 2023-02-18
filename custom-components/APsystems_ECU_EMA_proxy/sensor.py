@@ -14,6 +14,7 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 import logging
 LOGGER = logging.getLogger(__name__)
 
+import socket
 import socketserver
 from socketserver import BaseRequestHandler
 from datetime import datetime, timedelta
@@ -23,13 +24,27 @@ host = '172.16.0.19' #Your host IP-address here
 
 class HTTPSERVER(BaseRequestHandler):
     def handle(self):
+        (myhost, myport) = self.server.server_address
+        
         rec = self.request.recv(1024)
         if rec:
-            LOGGER.warning(f"Received: {rec}")
+            LOGGER.warning(f"Received data on port: {myport} from ECU at: {self.client_address[0]} data: {rec}")
             send_str = "Thank you!"
             LOGGER.warning(f"Sending: {send_str}")
             self.request.send(send_str.encode('utf-8'))
-            
+
+# Dit is de client voor de connectie naar de EMA server met variabele poort
+# aangeroepen met: client(ip, PORT, b'Hello World 1')
+def client(ip, port, message):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((ip, port))
+    try:
+        sock.sendall(message)
+        response = sock.recv(1024)
+        LOGGER.warning(f"Received: {response}")
+    finally:
+        sock.close()
+
 def setup_platform(
     hass: HomeAssistant,
     config: ConfigType,
@@ -45,9 +60,9 @@ def setup_platform(
     thread_2 = threading.Thread(target=listener_2.serve_forever)
     listener_3 = socketserver.TCPServer((host, 5002), HTTPSERVER)
     thread_3 = threading.Thread(target=listener_3.serve_forever)
-    LOGGER.warning("Proxy Started...")
     for threads in thread_1, thread_2, thread_3:
         threads.start()
+    LOGGER.warning("Proxy Started...")
 
 class ExampleSensor(SensorEntity):
     """Representation of a Sensor."""
