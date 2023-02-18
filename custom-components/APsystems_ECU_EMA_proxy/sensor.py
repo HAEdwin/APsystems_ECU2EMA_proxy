@@ -43,8 +43,10 @@ def setup_platform(
     thread_1 = threading.Thread(target=listener_1.serve_forever)
     listener_2 = socketserver.TCPServer((host, 5001), HTTPSERVER)
     thread_2 = threading.Thread(target=listener_2.serve_forever)
+    listener_3 = socketserver.TCPServer((host, 5002), HTTPSERVER)
+    thread_3 = threading.Thread(target=listener_3.serve_forever)
     LOGGER.warning("Proxy Started...")
-    for threads in thread_1, thread_2:
+    for threads in thread_1, thread_2, thread_3:
         threads.start()
 
 class ExampleSensor(SensorEntity):
