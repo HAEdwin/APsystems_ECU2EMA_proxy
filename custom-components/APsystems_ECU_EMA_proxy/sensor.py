@@ -28,22 +28,23 @@ class HTTPSERVER(BaseRequestHandler):
         
         rec = self.request.recv(1024)
         if rec:
-            LOGGER.warning(f"Received from ECU @{self.client_address[0]}:{myport} - {rec}")
+            LOGGER.warning(f"From ECU @{self.client_address[0]}:{myport} - {rec}")
 
             # forward message to EMA
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect(("3.67.1.32", myport))
             try:
                 sock.sendall(rec)
-                LOGGER.warning(f"Forwarded to EMA: {rec} on port: {myport}")
+                #LOGGER.warning(f"Forwarded to @EMA:{myport} - {rec}")
                 response = sock.recv(1024)
-                LOGGER.warning(f"Received from EMA: {response}")
+                LOGGER.warning(f"From EMA: {response}\n")
             finally:
                 sock.close()
             
             # return message to ECU
-            LOGGER.warning(f"Sending back to ECU: {response}")
+            #LOGGER.warning(f"Sending back to ECU: {response}\n")
             self.request.send(response)
+
 
 # Dit is de client voor de connectie naar de EMA server met variabele poort
 # aangeroepen met: client(ip, PORT, b'Hello World 1')
@@ -85,5 +86,5 @@ class ExampleSensor(SensorEntity):
 
     def update(self) -> None:
         # Fetch new state data for the sensor, this is the only method that should fetch new data for Home Assistant.
-        LOGGER.warning("Sensor update...")
+        #LOGGER.warning("Sensor update...")
         self._attr_native_value = 23
