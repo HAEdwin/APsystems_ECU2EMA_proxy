@@ -22,7 +22,7 @@ import threading
 
 host = '172.16.0.19' #Your host IP-address here
 
-class HTTPSERVER(BaseRequestHandler):
+class PROXYSERVER(BaseRequestHandler):
     def handle(self):
         (myhost, myport) = self.server.server_address
         
@@ -67,11 +67,11 @@ def setup_platform(
     """Set up the sensor platform."""
     add_entities([EMASensor()])
 
-    listener_1 = socketserver.TCPServer((host, 8995), HTTPSERVER)
+    listener_1 = socketserver.TCPServer((host, 8995), PROXYSERVER)
     thread_1 = threading.Thread(target=listener_1.serve_forever)
-    listener_2 = socketserver.TCPServer((host, 8996), HTTPSERVER)
+    listener_2 = socketserver.TCPServer((host, 8996), PROXYSERVER)
     thread_2 = threading.Thread(target=listener_2.serve_forever)
-    listener_3 = socketserver.TCPServer((host, 8997), HTTPSERVER)
+    listener_3 = socketserver.TCPServer((host, 8997), PROXYSERVER)
     thread_3 = threading.Thread(target=listener_3.serve_forever)
     for threads in thread_1, thread_2, thread_3:
         threads.start()
