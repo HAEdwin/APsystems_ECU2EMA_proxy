@@ -3,7 +3,7 @@
   "name": "APsystems ECU to EMA Proxy server",
   "documentation": "https://github.com/haedwin/APsystems_ECU2EMA_proxy",
   "issue_tracker": "https://github.com/haedwin/APsystems_ECU2EMA_proxy/issues",
-  "loggers": ["custom_components.apsystems_ecu2ema_proxy"]
+  "loggers": ["custom_components.apsystems_ecu2ema_proxy"],
   "config_flow": false,
   "dependencies": [],
   "codeowners": ["@haedwin"],
