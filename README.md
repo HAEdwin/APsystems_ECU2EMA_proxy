@@ -24,7 +24,7 @@ sensor:
 ```
 - Restart Home Assistant once more and the proxy will load
 - Finally: Use PiHole or AdGuard to rewrite DNS ecu.apsystemsema.com to your HA instance IP-addess
-- Until now you'll find a data message from your ECU and the EMA server in the log every 5 minutes (when sun is up) or 15 minutes (when sun is down)
+- Until now you'll only find data messages from your ECU and the EMA server in the log every 5 minutes (when sun is up) or 15 minutes (when sun is down)
 
 ## How it works (more or less)
 From what I know there are some data verifications build in to make sure data is complete and correct. After sunset these checks are performed every five minutes. When the datacheck is complete the communication takes place every 15 minutes. Around 03:00 in the morning firmware and maintenance checks are being done. Until sunset interval remains 15 minutes until the first inverter is up. This is the part we use/need.
