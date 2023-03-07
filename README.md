@@ -33,3 +33,4 @@ After three updates, the ECU initiates a "question" on what I think is the contr
 
 ## Where I need help
 - Finding the purpose of data not yet mapped to current values
+- Further develop the integration to a useful one, add sensors and such
