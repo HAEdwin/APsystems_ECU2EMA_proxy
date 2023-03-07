@@ -11,6 +11,10 @@ from homeassistant.const import POWER_WATT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+)
+
 
 import logging
 LOGGER = logging.getLogger(__name__)
